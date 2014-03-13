@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="yes" name="apple-touch-fullscreen">
+<meta content="telephone=no" name="format-detection">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>jQuery Plugin- PaintPane</title>
+<link rel="publisher" href=""/>
+<link rel="apple-touch-icon-precomposed" href="http://a.tbcdn.cn/mw/s/hi/tbtouch/images/touch-icon.png">
+<meta name="keywords" content="user experience, ux, wireframe, wireframes">
+<meta name="description" content="">
+<link href="css/fonts.css" type="text/css" rel="stylesheet" />
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<link rel="shortcut icon" href="favicon.ico" />
+<script type="text/javascript" src="../libs/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../jquery.paintPane.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	
+	function saveImageInfo (id)   
+	{  
+		var mycanvas = document.getElementById(id);  
+		var image    = mycanvas.toDataURL("image/png");  
+		var w=window.open('about:blank','image from canvas');  
+		w.document.write("<img src='"+image+"' alt='from canvas'/>");  
+	}  
+
+	function saveAsLocalImage (id) {  
+		var myCanvas = document.getElementById(id);
+		// here is the most important part because if you dont replace you will get a DOM 18 exception.  
+		// var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream;Content-Disposition: attachment;filename=foobar.png");  
+		var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");   
+		window.location.href=image; // it will save locally  
+	}  
+	
+	
+	//绘画
+	$("#paint-canvas").paintPane({ 
+		mode:        'pencil',  // 设置绘制模式
+	  lineWidth:   '1',       // 线的粗细设置
+	  bg:"white",			// 填充背景色
+	  strokeStyle: '#ff0099',  // 画笔颜色
+	  defaultBrushSize : '15', // 画笔大小
+	   maxBrushSize: '30', // 最大画笔大小
+		minBrushSize: '10', // 最小的画笔大小
+		inkAmount: '10'// 画笔的粒子数量，控制笔划的浓密程度
+	});    
+	
+	$(".btn-group").on("click",function(){
+		$(this).find(".btn-dropdown-menu").toggle("normal");
+	});
+	
+	$("#btn-brush .btn-dropdown-menu li").find("a").on("click",function(){
+		var line_width=$(this).find("em").html();
+		if($("#btn-ink").hasClass("curr")||$("#btn-crayon").hasClass("curr")){
+			$("#paint-canvas").paintPane("defaultBrushSize",line_width);
+		}else{
+			$("#paint-canvas").paintPane("lineWidth",line_width);
+		}
+	});
+	
+	$("#btn-brush .btn-dropdown-menu li").find("a").on("click",function(){
+		var line_width=$(this).find("em").html();
+		$("#paint-canvas").paintPane("lineWidth",line_width);
+	});
+	
+	$("#btn-color .btn-dropdown-menu li").find("a").on("click",function(){
+		var line_color=$(this).css("background-color");
+		$("#paint-canvas").paintPane("strokeStyle",line_color);
+	});
+	
+	$("#cont-right").find(".btn-ico").on("click",function(){
+		$(".btn-ico").removeClass("curr");
+		$(this).addClass("curr");
+		var id=$(this).attr("id");
+		switch(id){
+			case "btn-pencil":
+				$("#paint-canvas").paintPane("mode","pencil");
+				break;
+			case "btn-ink":
+				$("#paint-canvas").paintPane("mode","ink");
+				break;
+			case "btn-crayon":
+				$("#paint-canvas").paintPane("mode","crayon");
+				break;
+			case "btn-postout":
+				 saveImageInfo ("paint-canvas");
+				break;
+		}
+	});
+	
+	
+});
+
+</script>
+</head>
+<body>
+
+
+<!--主模块 -->
+<section class="paint-wrapper paint">
+<!--pr-main -->
+        <div class="pr-main">
+            <h2 class="prw-tit">画出你的风格：HTML5创意画板</h2>
+            <p class="head-pcon">现在，借助于Canvas元素的令人激动的特性，你可以挥洒创意，简单而高效地绘制出彰显个性的图画。</p>
+            <div class="canvas-main">
+                <canvas class="paint-canvas" id="paint-canvas"></canvas>
+            </div>
+            <!--controller -->
+            <div class="controller clearfix">
+                <!--cont-left -->
+                <div class="cont-left">
+                    <div class="btn-group btn-brush" id="btn-brush">
+                          <button class="sel-main"> 笔刷尺寸</button>
+                          <button class="sel-ico" data-toggle="dropdown"> <span class="caret"></span> </button>
+                          <ul class="btn-dropdown-menu">
+                            <li><a href="#"><em>1</em>px</a></li>
+                            <li><a href="#"><em>2</em>px</a></li>
+                            <li><a href="#"><em>4</em>px</a></li>
+                            <li><a href="#"><em>6</em>px</a></li>
+                            <li><a href="#"><em>8</em>px</a></li>
+                            <li><a href="#"><em>10</em>px</a></li>
+                            <li><a href="#"><em>14</em>px</a></li>
+                            <li><a href="#"><em>18</em>px</a></li>
+                            <li><a href="#"><em>20</em>px</a></li>
+                            <li><a href="#"><em>24</em>px</a></li>
+                          </ul>
+                    </div>
+                    
+                    <div class="btn-group btn-color" id="btn-color">
+                          <button class="sel-main">画笔颜色</button>
+                          <button class="sel-ico" data-toggle="dropdown"> <span class="caret"></span> </button>
+                          <ul class="btn-dropdown-menu btn-drop-color">
+                            <li><a href="#" class="bg-red">红色</a></li>
+                            <li><a href="#" class="bg-green">绿色</a></li>
+                            <li><a href="#" class="bg-blue">蓝色</a></li>
+                            <li><a href="#" class="bg-grey">灰色</a></li>
+                            <li><a href="#" class="bg-dark">黑色</a></li>
+                            <li><a href="#" class="bg-dark-blue">深蓝色</a></li>
+                            <li><a href="#" class="bg-dark-red">深红色</a></li>
+                            <li><a href="#" class="bg-pink">粉红色</a></li>
+                            <li><a href="#" class="bg-purple">紫色</a></li>
+                            <li><a href="#" class="bg-yellow">黄色</a></li>
+                          </ul>
+                    </div>
+                 </div>
+                <!--/cont-left -->
+            
+                <!--cont-right -->
+                <div class="cont-right" id="cont-right">
+                    <button class="btn-ico curr" id="btn-pencil"><span class="font-ico">&#9998;</span></button>
+                    <button class="btn-ico" id="btn-ink"><span class="font-ico">&#128167;</span></button>
+                    <button class="btn-ico" id="btn-crayon"><span class="font-ico">&#59290;</span></button>
+                    <button class="btn-ico" id="btn-postout"><span class="font-ico">&#127748;</span></button>
+                    
+                </div>
+                <!--cont-right -->
+            </div>
+            <!--controller -->
+        </div>
+        <!--/pr-main -->
+</section>
+<!-- /主模块 --> 
+
+<!-- 底部 -->
+<footer id="foot">
+    <div class="footer-wrapper">
+        <div class="copyright main-wrapper">Copy © 2010~2014 <a href="#">Dfabl</a>.All Rights Reserved•Hosted By <a href="http://www.hengtian.cc/">hengtian.cc</a></div>
+    </div>
+</footer>
+</body>
+</html>
