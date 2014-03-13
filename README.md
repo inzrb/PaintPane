@@ -13,9 +13,9 @@ Get Started
    
    Please make sure that the `jQuery`  version you are using is 1.7+,or it maybe doesn't work well.
 
-    ```html
-    <script src="http://code.jquery.com/jquery.min.js"></script>
-    ```
+	```html
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
+	```
 
 2. Include the plugin `paintPane` on your page.
 
