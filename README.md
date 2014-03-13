@@ -9,9 +9,6 @@ PaintPane is A jQuery paint plugin for a simple drawing surface that you can eas
 Get Started
 -----------
 
-To get started using Pure, go to the [Pure CSS website][Pure]. The website has
-extensive documentation and examples necessary to get you started using Pure.
-
 1.First,You should include jQuery  on your page.
    
    Please make sure that the `jQuery`  version you are using is 1.7+,or it maybe doesn't work well.
